@@ -1,0 +1,55 @@
+---
+
+# commands that SHOULD be performed with sudo privelages
+#==============================================================
+- hosts: all
+  sudo: True
+
+  tasks:
+    - name: install git
+      apt: name=git state=present
+
+    - name: install emacs
+      apt: name=emacs state=present
+
+    - name: install zsh
+      apt: name=zsh state=present
+
+    - name: make zsh default shell
+      command: chsh --shell /usr/bin/zsh vagrant
+
+
+# commands that SHOULD NOT be performed with sudo privelages
+#==============================================================
+- hosts: all
+  sudo: False
+
+  tasks:
+    - name: clone dot files
+      git: repo=https://github.com/galtay/dot_files.git
+           dest=/home/vagrant/git_repos/dot_files
+
+    - name: create .emacs.d directory
+      file: path=/home/vagrant/.emacs.d
+            state=directory
+            mode=0755
+
+    - name: copy emacs init.el from dot_files repo to .emacs.d directory
+      copy: remote_src=True
+            src=/home/vagrant/git_repos/dot_files/.emacs.d/init.el
+            dest=/home/vagrant/.emacs.d/init.el
+
+    - name: install oh-my-zsh
+      git: repo=https://github.com/robbyrussell/oh-my-zsh.git
+           dest=/home/vagrant/.oh-my-zsh
+
+    - name: copy .zshrc from dot_files repo to home directory
+      copy: remote_src=True
+            src=/home/vagrant/git_repos/dot_files/.zshrc
+            dest=/home/vagrant/.zshrc
+
+    - name: download anaconda3 4.0.0 64 bit
+      shell: wget --no-clobber "http://repo.continuum.io/archive/Anaconda3-4.0.0-Linux-x86_64.sh" && chmod u+x Anaconda3-4.0.0-Linux-x86_64.sh
+
+    - name: install anaconda3 4.0.0 64 bit
+      command: /home/vagrant/Anaconda3-4.0.0-Linux-x86_64.sh -b
