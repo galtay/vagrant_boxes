@@ -1,8 +1,10 @@
 # vagrant_boxes
 Various vagrant environments
 
+Tested with 
 
-## Ubuntu 14.04 LTS (Trusty Tahr)
+Virtual Box (5.0.20 r106931)
+Ansible (2.1.0.0)
+vagrant (1.8.1)
 
-    > vagrant init ubuntu/trusty64
-    > vagrant up
+
